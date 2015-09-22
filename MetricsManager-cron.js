@@ -4,7 +4,7 @@
  */
 
 var fs = require('fs');
-var EventEmitter = require('events');
+//var EventEmitter = require('events');
 var Metric = require('./Metric-cron');
 var winston = require('winston');
 
@@ -18,9 +18,7 @@ var MetricsManager = function(){
 
     var self = this;
 
-
-
-    this.emitter = new EventEmitter();
+    //this.emitter = new EventEmitter();
 
     // Load configuration
     this.configuration = require('./config.json');
@@ -65,34 +63,8 @@ var MetricsManager = function(){
         // Instantiate metric
         var metric = new Metric(self.configuration.metricsFolder + self.metricFiles[i], self.emitter,self.configuration);
 
-        // Logger creation
-        metric.logger = new (winston.Logger)({ levels: self.configuration.logging.levels,silent:false});
-        metric.logger.add(winston.transports.Console,{
-            colorize:true
-        });
-
-        //Console transport
-        metric.logger.toConsole = new (winston.Logger)({ levels: self.configuration.logging.levels,level:'data',silent:false});
-        metric.logger.toConsole.add(winston.transports.Console,{
-            level:'data',
-            colorize:true
-        });
-
-        //File transport
-        metric.logger.toFile = new (winston.Logger)({ levels: self.configuration.logging.levels,level:'data',silent:false});
-        metric.logger.toFile.add(winston.transports.File,{
-            level:'data',
-            filename: self.configuration.logFolder + metric.config.name + '.log',
-            timestamp:false,
-            json:false,
-            showLevel:false
-            });
-
-
         // Add metric reference to array of metrics
         self.metrics.push(metric);
-        console.log('Configuration : ');
-        console.log(metric.config);
         sep();
     }
 
@@ -100,7 +72,6 @@ var MetricsManager = function(){
 // Start all metrics
     this.startAll = function() {
         for (i = 0; i < self.metrics.length; i++) {
-            console.log("Started : " + metric.codeFile);
             self.metrics[i].start();
         }
     };

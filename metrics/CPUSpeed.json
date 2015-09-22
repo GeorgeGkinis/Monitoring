@@ -3,7 +3,7 @@
   "schedule":"* * * * * *",
   "enabled": true,
   "output" : {
-    "db": true,
+    "db": false,
     "file": true,
     "console": true
   },

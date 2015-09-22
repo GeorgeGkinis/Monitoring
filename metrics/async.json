@@ -1,5 +1,5 @@
 {
-  "name":"Uptime",
+  "name":"async",
   "schedule":"* * * * * *",
   "enabled": true,
   "output" : {
@@ -9,6 +9,6 @@
   },
 
   "tags": [
-    "os","uptime"
+    "test","async"
   ]
 }

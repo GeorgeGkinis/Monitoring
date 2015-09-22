@@ -1,5 +1,7 @@
 var os = require('os');
 
-module.exports.measure = function(){
-     return os.uptime();
+module.exports.measure = function(measurement){
+    // Synchronous example
+     measurement.data = os.uptime();
+     measurement.isDone();
 };
