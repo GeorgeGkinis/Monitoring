@@ -1,0 +1,14 @@
+{
+  "name":"CPU_Speed",
+  "schedule":"* * * * * *",
+  "enabled": true,
+  "output" : {
+    "db": true,
+    "file": true,
+    "console": true
+  },
+
+  "tags": [
+    "os","cpu"
+  ]
+}

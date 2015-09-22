@@ -1,0 +1,14 @@
+{
+  "name":"Uptime",
+  "schedule":"* * * * * *",
+  "enabled": false,
+  "output" : {
+    "db": true,
+    "file": true,
+    "console": true
+  },
+
+  "tags": [
+    "os","uptime"
+  ]
+}

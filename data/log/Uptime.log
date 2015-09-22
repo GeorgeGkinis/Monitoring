@@ -1,0 +1,16 @@
+{"origin":"Uptime","timestamp":"2015-09-21T10:24:23.975Z","data":5951,"level":"data","message":""}
+2015-09-21T10:25:20.788Z - data:  origin=Uptime, start=2015-09-21T10:25:20.788Z, stop=2015-09-21T10:25:20.788Z, data=6008
+data:  origin=Uptime, start=2015-09-21T10:25:41.763Z, stop=2015-09-21T10:25:41.763Z, data=6029
+ origin=Uptime, start=2015-09-21T10:29:43.136Z, stop=2015-09-21T10:29:43.136Z, data=6270
+ origin=Uptime, start=2015-09-21T10:40:07.642Z, stop=2015-09-21T10:40:07.642Z, data=6895
+ origin=Uptime, start=2015-09-21T11:01:41.076Z, stop=2015-09-21T11:01:41.076Z, data=8188
+ origin=Uptime, start=2015-09-21T11:01:59.694Z, stop=2015-09-21T11:01:59.695Z, data=8207
+ origin=Uptime, start=2015-09-21T11:02:14.654Z, stop=2015-09-21T11:02:14.655Z, data=8222
+ origin=Uptime, start=2015-09-21T11:02:26.300Z, stop=2015-09-21T11:02:26.302Z, data=8233
+ origin=Uptime, start=2015-09-21T11:02:49.660Z, stop=2015-09-21T11:02:49.660Z, data=8257
+ origin=Uptime, start=2015-09-21T11:02:52.161Z, stop=2015-09-21T11:02:52.161Z, data=8259
+ origin=Uptime, start=2015-09-21T11:02:54.661Z, stop=2015-09-21T11:02:54.662Z, data=8262
+ origin=Uptime, start=2015-09-21T11:02:57.163Z, stop=2015-09-21T11:02:57.163Z, data=8264
+ origin=Uptime, start=2015-09-21T11:03:02.047Z, stop=2015-09-21T11:03:02.048Z, data=8269
+ origin=Uptime, start=2015-09-21T11:04:28.533Z, stop=2015-09-21T11:04:28.534Z, data=8356
+ origin=Uptime, start=2015-09-21T11:04:40.615Z, stop=2015-09-21T11:04:40.616Z, data=8368
