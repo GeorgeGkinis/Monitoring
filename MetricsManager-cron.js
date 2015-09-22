@@ -91,7 +91,3 @@ var MetricsManager = function(){
 
 
 module.exports = new MetricsManager();
-
-
-
-
