@@ -123,7 +123,7 @@ proto.loadConfig = function(path) {
 
 proto.isDone = function(metric,measurement){
             measurement.timestamp.stop = new Date().toJSON();
-            measurement.isDone= true;
+            delete measurement.isDone;
             if (metric.config.output.file == true) metric.logger.toFile.data(measurement);
             if (metric.config.output.console == true) metric.logger.toConsole.data(measurement);
             // if (metric.config.output.db == true) metric.logger.toDB.data(metric.measurements[i]);
