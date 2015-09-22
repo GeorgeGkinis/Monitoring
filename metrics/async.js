@@ -5,6 +5,8 @@ module.exports.measure = function(measurement){
     setTimeout(
         function(){
             measurement.data =  os.cpus()[0].speed;
+
+            // isDone should be invoked from within the callback
             measurement.isDone();
         },3000);
 };

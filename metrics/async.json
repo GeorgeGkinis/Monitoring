@@ -1,11 +1,11 @@
 {
   "name":"async",
   "schedule":"* * * * * *",
-  "enabled": true,
+  "enabled": false,
   "output" : {
-    "db": true,
-    "file": true,
-    "console": true
+    "db": false,
+    "file": false,
+    "console": false
   },
 
   "tags": [

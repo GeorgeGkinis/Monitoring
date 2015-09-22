@@ -1,49 +1,69 @@
 var os = require('os');
 var chokidar = require('chokidar');
 var winston = require('winston');
+require('winston-mongodb').MongoDB;
 var CronJob = require('cron').CronJob;
 
-function Metric(codeFile,emitter,configuration) {
+function Metric(codeFile,emitter,configuration,db) {
 
     var metric = this;
 
+    this.db = db;
     // Logger creation
-    metric.logger = new (winston.Logger)({ levels: configuration.logging.levels,silent:false});
+    metric.logger = new (winston.Logger)({ levels: configuration.logging.levels});
     metric.logger.add(winston.transports.Console,{
+        name:'console',
         prettyPrint:true,
         colorize:true
     });
 
     // Load the configFile
-    metric.loadConfig(codeFile.substr(0,codeFile.length-3)+'.json');
+    metric.loadConfig(codeFile);
 
-    //Console transport
-    metric.logger.toConsole = new (winston.Logger)({ levels: configuration.logging.levels,level:'data',silent:false});
-    metric.logger.toConsole.add(winston.transports.Console,{
-        level:'data',
-        colorize:true
-    });
-
-    //File transport
-    metric.logger.toFile = new (winston.Logger)({ levels: configuration.logging.levels,level:'data',silent:false});
-    metric.logger.toFile.add(winston.transports.File,{
-        level:'data',
+    metric.logger.add(winston.transports.File,{
+        name:'file',
         filename: configuration.logFolder + metric.config.name + '.log',
         timestamp:false,
         json:false,
-        showLevel:false
+        showLevel:true
     });
 
-    // Assume the configFile has the same name as the codeFile with .json extention.
-    //TODO : Make no assumptions on configFile name
-    this.config.configFile = codeFile.substr(0,codeFile.length-3)+'.json';
+    metric.logger.add(winston.transports.MongoDB,{
+        name:'db',
+        db: configuration.database.type + '://' + configuration.database.address + ':'+'27017'+ '/metrics',
+        collection:metric.config.name
+    });
 
+    metric.dataLogger = new (winston.Logger)({ levels: configuration.logging.levels});
+    metric.dataLogger.add(winston.transports.Console,{
+        name:'console',
+        //silent: true,
+        level : 'data',
+        prettyPrint:true,
+        colorize:true
+    });
+    metric.dataLogger.add(winston.transports.File,{
+        name:'file',
+        level : 'data',
+        filename: configuration.logFolder + metric.config.name + '.log',
+        timestamp:false,
+        json:false,
+        showLevel:true
+    });
 
-    // Remember who called
-    this.config.codeFile = codeFile;
+    metric.dataLogger.add(winston.transports.MongoDB,{
+        name:'db',
+        level : 'data',
+        db: configuration.database.type + '://' + configuration.database.address + ':'+'27017'+ '/metrics',
+        collection:metric.config.name
+    });
 
     // Attach the custom function for this metric
-    this.measure = require(metric.config.codeFile).measure;
+    try {
+        this.measure = require(metric.config.codeFile).measure;
+    }catch(e){
+        metric.logger.eror('Code file is corrupt. Aborting! : ' + metric.config.codeFile);
+    }
 
 
     // Cron job object
@@ -51,15 +71,15 @@ function Metric(codeFile,emitter,configuration) {
 
     // Set up watcher for this instances configFile.
     this.watcher = chokidar.watch(this.config.configFile, {
-        persistent: true
+        persistent: true,
         //,useFsEvents: true
-        ,usePolling: true
-        ,interval: 1000
+        usePolling: true,
+        interval: 1000
     });
 
     // Reload config on file change
     this.watcher.on('change',function(path){
-        metric.loadConfig(metric.config.configFile);
+        metric.loadConfig(codeFile);
         metric.stop();
         metric.start();
     });
@@ -75,9 +95,14 @@ var proto = Metric.prototype;
 // We use a nested timer to be able to change the interval dynamically.
 proto.start = function () {
     if (this.config.enabled === true) {
-        this.job = new CronJob(this.config.schedule, this.callback, this);
+
         this.logger.info('Metric ' + this.config.name + ' started with schedule : ' + this.config.schedule);
+        this.job = new CronJob(this.config.schedule, this.callback, this);
         this.job.start();
+
+        if (this.config.output.hasOwnProperty("console")) this.dataLogger.transports.console.silent = !this.config.output.console;
+        if (this.config.output.hasOwnProperty("file")) this.dataLogger.transports.file.silent = !this.config.output.file;
+        if (this.config.output.hasOwnProperty("db")) this.dataLogger.transports.db.silent = !this.config.output.db;
     }
 };
 
@@ -89,6 +114,7 @@ proto.stop = function() {
 proto.once = function() {
     this.callback(this);
 };
+
 // Callback which calls the measure function.
 proto.callback = function(metric) {
     if (metric.config.enabled === true) {
@@ -96,7 +122,7 @@ proto.callback = function(metric) {
         measurement.isDone = function(){
             metric.isDone(metric,measurement);
         };
-        measurement.origin = metric.config.name;
+        //measurement.origin = metric.config.name;
         measurement.timestamp = {};
         measurement.timestamp.start = new Date().toJSON();
         try {
@@ -109,24 +135,30 @@ proto.callback = function(metric) {
 };
 
 // Reloads the config file associated with this instance.
-proto.loadConfig = function(path) {
+proto.loadConfig = function(codeFile) {
+    var configFile = codeFile.substr(0,codeFile.length-3)+'.json';
+    //Empty the configuration file from cache to actually reload.
     try {
-        delete require.cache[require.resolve(path)];
-        this.config = require(path);
-        this.logger.info('Configuration successfully loaded! : ' + path );
-        this.logger.info(this.config);
+        delete require.cache[require.resolve(configFile)];
     }catch (e) {
-        this.logger.error('Configuration file is corrupt. Aborting! : ' + path);
+        this.logger.warn('Cannot remove file from cache!');
     }
 
+    try {
+        this.config = require(configFile);
+        this.config.configFile = configFile;
+        this.config.codeFile = codeFile;
+        this.logger.info('Configuration successfully loaded! : ' + configFile );
+        this.logger.info(this.config);
+    }catch (e) {
+        this.logger.error('Configuration file is corrupt. Aborting! : ' + configFile);
+    }
 };
 
 proto.isDone = function(metric,measurement){
-            measurement.timestamp.stop = new Date().toJSON();
-            delete measurement.isDone;
-            if (metric.config.output.file == true) metric.logger.toFile.data(measurement);
-            if (metric.config.output.console == true) metric.logger.toConsole.data(measurement);
-            // if (metric.config.output.db == true) metric.logger.toDB.data(metric.measurements[i]);
-        };
+    measurement.timestamp.stop = new Date().toJSON();
+    delete measurement.isDone;
+    metric.dataLogger.data(JSON.stringify(measurement));
+};
 
 module.exports = Metric;

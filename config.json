@@ -15,10 +15,10 @@
       "silly": 0,
       "verbose": 1,
       "info": 2,
-      "data": 3,
-      "warn": 4,
-      "debug": 5,
-      "error": 6
+      "warn": 3,
+      "debug": 4,
+      "error": 5,
+      "data": 6
     },
     "colors": {
       "silly": "magenta",
