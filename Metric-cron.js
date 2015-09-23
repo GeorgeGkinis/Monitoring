@@ -108,7 +108,7 @@ proto.start = function () {
 };
 
 proto.stop = function() {
-    if (this.job.hasOwnProperty('stop')) {
+    if (this.job.__proto__.hasOwnProperty('stop')) {
         this.job.stop();
         this.logger.info('Metric ' + this.config.name + ' stopped.');
     }
@@ -125,7 +125,7 @@ proto.callback = function(metric) {
         measurement.isDone = function(){
             metric.isDone(metric,measurement);
         };
-        //measurement.origin = metric.config.name;
+        measurement.origin = metric.config.name;
         measurement.timestamp = {};
         measurement.timestamp.start = new Date().toJSON();
         try {

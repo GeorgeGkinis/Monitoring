@@ -1,6 +1,6 @@
 {
   "name":"postgres-example",
-  "schedule":"* 1 * * * *",
+  "schedule":"*/5 * * * * *",
   "enabled": true,
   "db": {
     "host": "r3liandb",

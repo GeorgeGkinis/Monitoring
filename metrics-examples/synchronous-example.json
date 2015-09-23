@@ -1,7 +1,7 @@
 {
-  "name":"CPU_Speed",
+  "name":"synchronous-example",
   "schedule":"* * * * * *",
-  "enabled": false,
+  "enabled": true,
   "output" : {
     "db": true,
     "file": false,
