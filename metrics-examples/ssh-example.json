@@ -1,0 +1,19 @@
+{
+  "name":"ssh-example",
+  "schedule":"* * * * * *",
+  "enabled": false,
+  "ssh": {
+    "host": "r3liandb",
+    "user": "root",
+    "pass": "rootx2"
+  },
+  "output" : {
+    "db": false,
+    "file": false,
+    "console": true
+  },
+
+  "tags": [
+    "os","cpu", "test"
+  ]
+}

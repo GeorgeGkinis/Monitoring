@@ -83,6 +83,7 @@ function Metric(codeFile,emitter,configuration,db) {
         metric.stop();
         metric.start();
     });
+
 }
 
 
@@ -107,8 +108,10 @@ proto.start = function () {
 };
 
 proto.stop = function() {
-    this.job.stop();
-    this.logger.info('Metric ' + this.config.name + ' stopped.');
+    if (this.job.hasOwnProperty('stop')) {
+        this.job.stop();
+        this.logger.info('Metric ' + this.config.name + ' stopped.');
+    }
 };
 
 proto.once = function() {
@@ -126,7 +129,7 @@ proto.callback = function(metric) {
         measurement.timestamp = {};
         measurement.timestamp.start = new Date().toJSON();
         try {
-            metric.measure(measurement);
+            metric.measure(measurement,metric);
         }catch(e){
             metric.logger.error('Code file is corrupt. Aborting! : ' + metric.config.codeFile);
             metric.stop();

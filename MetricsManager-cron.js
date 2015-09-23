@@ -12,14 +12,18 @@ require('winston-mongodb').MongoDB;
 
 
 
-var MetricsManager = function(){
+var MetricsManager = function(configurationFile){
 
     var self = this;
 
     //this.emitter = new EventEmitter();
 
     // Load configuration
-    this.configuration = require('./config.json');
+    try {
+        this.configuration = require(configurationFile);
+    }catch(e){
+        console.log('Configuration file corrupt or missing! : ' + configurationFile);
+    }
 
     var sep = function() { console.log('\n============================================================\n');}
 
@@ -53,25 +57,50 @@ var MetricsManager = function(){
     }
 
 
-// Start all metrics
+    // Start a specific metric.
+    this.start = function(metricName) {
+        for (i = 0; i < self.metrics.length; i++) {
+            if (self.metrics[i].config.name == metricName)
+                self.metrics[i].start();
+        }
+    };
+    // Stop a specific metric.
+    this.stop = function(metricName) {
+        for (i = 0; i < self.metrics.length; i++) {
+            if (self.metrics[i].config.name == metricName)
+                self.metrics[i].stop();
+        }
+    };
+
+    // Run a specific metric once
+    this.once = function(metricName) {
+        for (i = 0; i < self.metrics.length; i++) {
+            if (self.metrics[i].config.name == metricName)
+                self.metrics[i].once();
+        }
+    };
+    // Start all metrics
     this.startAll = function() {
         for (i = 0; i < self.metrics.length; i++) {
             self.metrics[i].start();
         }
     };
-// Stop all metrics
+    // Stop all metrics
     this.stopAll = function() {
         for (i = 0; i < self.metrics.length; i++) {
             self.metrics[i].stop();
         }
     };
-// Run all metrics once
+
+    // Run all metrics once
     this.onceAll = function(){
         for (i = 0; i < self.metrics.length; i++) {
             self.metrics[i].once();
         }
-    }
+    };
+
+
 };
 
 
-module.exports = new MetricsManager();
+module.exports = MetricsManager;

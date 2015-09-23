@@ -1,14 +1,14 @@
 {
-  "name":"Uptime",
+  "name":"CPU_Speed",
   "schedule":"* * * * * *",
   "enabled": false,
   "output" : {
-    "db": false,
+    "db": true,
     "file": false,
-    "console": false
+    "console": true
   },
 
   "tags": [
-    "os","uptime"
+    "os","cpu", "test"
   ]
 }

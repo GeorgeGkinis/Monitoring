@@ -1,0 +1,20 @@
+{
+  "name":"postgres-example",
+  "schedule":"* 1 * * * *",
+  "enabled": true,
+  "db": {
+    "host": "r3liandb",
+    "user": "osp_admin",
+    "pass": "osp_admin",
+    "database": "osp_logging"
+  },
+  "output" : {
+    "db": false,
+    "file": false,
+    "console": true
+  },
+
+  "tags": [
+    "os","cpu", "test"
+  ]
+}

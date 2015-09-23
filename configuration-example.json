@@ -1,5 +1,5 @@
 {
-  "metricsFolder": "./metrics/",
+  "metricsFolder": "./metrics-examples/",
   "logFolder": "./data/log/",
   "dbFolder": "./data/db",
 
