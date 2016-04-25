@@ -4,9 +4,9 @@
   "enabled": true,
   "db": {
     "host": "r3liandb",
-    "user": "osp_admin",
-    "pass": "osp_admin",
-    "database": "osp_logging"
+    "user": "username",
+    "pass": "password",
+    "database": "logging"
   },
   "output" : {
     "db": false,
