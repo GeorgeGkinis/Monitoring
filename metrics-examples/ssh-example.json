@@ -3,9 +3,9 @@
   "schedule":"*/5 * * * * *",
   "enabled": true,
   "ssh": {
-    "host": "r3liandb",
-    "user": "root",
-    "pass": "rootx2"
+    "host": "targetHost",
+    "user": "username",
+    "pass": "password"
   },
   "output" : {
     "db": false,
